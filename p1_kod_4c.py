@@ -6,23 +6,19 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Moja aplikacja")
-        self.button_is_checked = True
-        button = QPushButton("Kliknij")
-        button.setCheckable(True)
-        button.setFixedSize(200, 100)
-        button.clicked.connect(self.button_klikniety)
-        button.clicked.connect(self.button_przelaczony)
-        self.setCentralWidget(button)
+
+        self.button = QPushButton("Kliknij")
+        self.button.setFixedSize(200, 100)
+        self.button.clicked.connect(self.button_klikniety)
+
+        self.setCentralWidget(self.button)
         self.setMinimumSize(QSize(400, 300))
         self.setMaximumSize(QSize(600, 450))
 
     def button_klikniety(self):
+        self.button.setText("Zostałem już kliknięty")
+        self.button.setEnabled(False)
         print("Kliknięto przycisk")
-
-    def button_przelaczony(self, checked):
-        self.button_is_checked = checked
-        print("Zaznaczony przycisk? ", checked)
-        
 
 
 app = QApplication([])
