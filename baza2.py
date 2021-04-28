@@ -13,24 +13,22 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__(*args, **kwargs)
         self.setupUi(self)
         self.btnSave.clicked.connect(self.zapisz_do_bazy)
-
-        self.model = QSqlTableModel(db=db)
+        
+        query='''SELECT EmployeeId, LastName, FirstName FROM employees;'''    
+        self.model = QSqlQueryModel()
+        self.model.setQuery(query,db)
         self.tableView.setModel(self.model)
-        self.model.setTable("artists")
-        self.model.select()
-        # self.setCentralWidget(self.table)
+
 
     def zapisz_do_bazy(self):
-        # f = open("plik.txt", "a")
-        # tekst = self.plainTextEdit.toPlainText()
-        # f.write(tekst)
-        # f.close()
-        parametr_Name = self.plainTextEdit.toPlainText()
-        sql_insert = f"""INSERT INTO artists (Name) 
-                      VALUES ('{parametr_Name}');"""
 
-        wynik = db.exec(sql_insert)
-        self.model.select()
+        parametr_Name = self.plainTextEdit.toPlainText()
+        query=f'''SELECT EmployeeId, LastName, FirstName
+                    FROM employees 
+                    WHERE LastName Like '{parametr_Name}%';'''
+     
+        self.model.setQuery(query,db)
+        self.tableView.setModel(self.model)
 
 
 app = QtWidgets.QApplication([])

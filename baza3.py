@@ -1,11 +1,22 @@
-#from PyQt6.QtCore import QSize, Qt
-#from PyQt6.QtWidgets import QApplication, QMainWindow, QTableView
+import psycopg2
 from PyQt6.QtSql import QSqlDatabase, QSqlTableModel, QSqlQueryModel
 from mainwindow import Ui_MainWindow
 from PyQt6 import QtCore, QtGui, QtWidgets
-db = QSqlDatabase("QSQLITE")
-db.setDatabaseName("./baza/chinook.db")
+
+connection = psycopg2.connect(host='localhost', user='postgres', password='Nana@1974', port ='5432', database='szkolenie')
+
+db = QSqlDatabase.addDatabase("QPSQL")
+db.setHostName('localhost')
+db.setUserName('postgres')
+db.setPassword('Nana@1974')
+db.setDatabaseName('szkolenie')
 db.open()
+cursor = connection.cursor()
+
+cursor.execute("Select Version();")
+record =cursor.fetchone()
+print("Podłączyleś się:",record)
+
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -16,21 +27,17 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.model = QSqlTableModel(db=db)
         self.tableView.setModel(self.model)
-        self.model.setTable("artists")
+        self.model.setTable("test")
         self.model.select()
-        # self.setCentralWidget(self.table)
 
     def zapisz_do_bazy(self):
-        # f = open("plik.txt", "a")
-        # tekst = self.plainTextEdit.toPlainText()
-        # f.write(tekst)
-        # f.close()
-        parametr_Name = self.plainTextEdit.toPlainText()
-        sql_insert = f"""INSERT INTO artists (Name) 
-                      VALUES ('{parametr_Name}');"""
 
-        wynik = db.exec(sql_insert)
-        self.model.select()
+        parametr_Name = self.plainTextEdit.toPlainText()
+        # sql_insert = f"""INSERT INTO artists (Name) 
+        #               VALUES ('{parametr_Name}');"""
+
+        # wynik = db.exec(sql_insert)
+        # self.model.select()
 
 
 app = QtWidgets.QApplication([])
